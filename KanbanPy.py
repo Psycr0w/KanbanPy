@@ -32,6 +32,7 @@ def create_card(column_name, content=""):
     card.bind("<ButtonRelease-1>", on_drag_stop)
     card.bind("<Button-3>", delete_card)
     columns[column_name]['cards'].append(card)
+    save_to_json()
     return card
 
 def delete_card(event):
@@ -39,6 +40,7 @@ def delete_card(event):
     card.pack_forget()
     column_name = [col for col, details in columns.items() if card in details['cards']][0]
     columns[column_name]['cards'].remove(card)
+    save_to_json()
 
 def on_drag_start(event):
     widget = event.widget
@@ -67,6 +69,7 @@ def on_drag_stop(event):
             widget.pack_forget()
             columns[source_column]['cards'].remove(widget)
             create_card(target_column, text)
+        save_to_json()
     drag_data["widget"] = None
     drag_data["target_column"] = None
     drag_data["source_column"] = None
@@ -80,13 +83,13 @@ def add_card(*args):  # Added *args to accommodate events
 
 
 root = tk.Tk()
-root.title('KanbanPy')
+root.title('Simple Kanban App')
 root.configure(bg='#1A1E27')  # Setting root background color for Tokyo Nights
 
 column_names = ['To-Do', 'Doing', 'Done']
 
 for name in column_names:
-    frame = tk.LabelFrame(root, text=name, bg='#1A1E27', fg='#A4A6AC')
+    frame = tk.LabelFrame(root, text=name, bg='#1A1E27', fg='#A4A6AC')  # Changed ttk.LabelFrame to tk.LabelFrame
     frame.pack(side='left', fill='both', expand='yes')
     columns[name] = {'frame': frame, 'cards': []}
 
